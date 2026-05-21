@@ -1,11 +1,11 @@
-import express from 'express';
-import cors from 'cors';
+import express, { Express, Request, Response } from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const app = express();
+const app: Express = express();
 const PORT = process.env.PORT || 8000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit-tracker';
 
@@ -16,20 +16,14 @@ app.use(express.json());
 // MongoDB Connection
 mongoose.connect(MONGODB_URI)
   .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ MongoDB connection error:', err));
+  .catch((err) => console.error('❌ MongoDB connection error:', err));
 
-// Routes
-app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    status: 'healthy',
-    service: 'OctoFit Tracker API',
-    timestamp: new Date().toISOString()
-  });
+// Health Check Endpoint
+app.get('/api/health', (req: Request, res: Response) => {
+  res.json({ status: 'OK', message: '🐙 OctoFit Tracker Backend is running', port: PORT });
 });
 
 // Start Server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
-
-export default app;
